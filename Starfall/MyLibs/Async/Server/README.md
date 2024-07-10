@@ -1,6 +1,9 @@
-# Asynchronous Library For Starfall
+# Asynchronous Server Library For Starfall
 
-## Example 1: 
+## Example 1: Thread race game with 2 threads
+In this example two threads will be made that are called ThreadA and ThreadB.
+Both threads will count to ten. Each thread will have a random wait time before it counts up by one.
+The first thread to get to ten wins.
 
 ```lua
 --@name async_example_game_2_threads
@@ -88,7 +91,12 @@ end):run() --Called :run() right after creation. No need to store this thread
 
 ```
 
-## Example 2:
+## Example 2: Thread race game with 10 threads
+In example 1 we saw that 2 threads were made manually. This is usefull if we need a few threads but 
+what if we need more like 10 or 100 or even more.
+To solve this issue we use loops to create multiple threads and keep track of what their counts are.
+In this example ten threads will try to count to ten. The first thread to get to ten first wins.
+This example is the same as the first one except for the way it handles multiple threads.
 
 ```lua
 --@name async_example_game_10_threads
@@ -158,7 +166,8 @@ Async.thread.create(function()
     --Thread closes automatically when it reached its end.
     print("Exiting main thread. Closing race")       
     
-end):run() --Called :run() right after creation. No need to store this thread 
+end):run() --Called :run() right after creation. No need to store this thread
+
 ```
 
 ## License
