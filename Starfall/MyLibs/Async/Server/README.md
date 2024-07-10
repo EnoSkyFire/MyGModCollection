@@ -94,10 +94,10 @@ end):run() --Called :run() right after creation. No need to store this thread
 --@name async_example_game_10_threads
 --@author ESF
 --@server
---@include esf_libs/async/async_sv_v0.1.1.txt
+--@include Starfall/MyLibs/Async/Server/async_sv_lib.txt
 
 --Get the library
-Async = require("esf_libs/async/async_sv_v0.1.1.txt")
+Async = require("Starfall/MyLibs/Async/Server/async_sv_lib.txt")
 Async.startThreading()
 
 --This is for later
