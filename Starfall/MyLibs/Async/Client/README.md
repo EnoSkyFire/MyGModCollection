@@ -9,12 +9,12 @@ The first thread to get to ten wins.
 --@name async_example_game_2_threads
 --@author ESF
 --@client
---@include Starfall/MyLibs/Async/Server/async_sv_lib.txt
+--@include Starfall/MyLibs/Async/Client/async_cl_lib.txt
 --Source: Async Public Starfall Lib from Aeralius
 --Note: Modified version of the example for the public Starfall Async Lib from Aeralius
 
 --Get the library
-Async = require("Starfall/MyLibs/Async/Server/async_cl_lib.txt")
+Async = require("Starfall/MyLibs/Async/Client/async_cl_lib.txt")
 Async.startThreading()
 
 --This is for later
@@ -102,10 +102,10 @@ This example is the same as the first one except for the way it handles multiple
 --@name async_example_game_10_threads
 --@author ESF
 --@client
---@include Starfall/MyLibs/Async/Server/async_sv_lib.txt
+--@include Starfall/MyLibs/Async/Client/async_cl_lib.txt
 
 --Get the library
-Async = require("Starfall/MyLibs/Async/Server/async_cl_lib.txt")
+Async = require("Starfall/MyLibs/Async/Client/async_cl_lib.txt")
 Async.startThreading()
 
 --This is for later
