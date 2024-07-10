@@ -1,4 +1,4 @@
-# Asynchronous Client Library For Starfall
+# Asynchronous Shared Library For Starfall
 
 ## Example 1: Thread race game with 2 threads
 In this example two threads will be made that are called ThreadA and ThreadB.
