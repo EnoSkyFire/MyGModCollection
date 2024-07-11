@@ -6,7 +6,7 @@ Both threads will count to ten. Each thread will have a random wait time before 
 The first thread to get to ten wins.
 
 ```lua
---@name async example game new
+--@name async_example_game_2_threads
 --@author ESF
 --@shared
 --@include Starfall/MyLibs/Async/Shared/async_lib.txt
@@ -178,7 +178,7 @@ In this example ten threads will try to count to ten. The first thread to get to
 This example is the same as the first one except for the way it handles multiple threads.
 
 ```lua
---@name async example game new edit2
+--@name async_example_game_10_threads
 --@author ESF
 --@shared
 --@include Starfall/MyLibs/Async/Shared/async_lib.txt
