@@ -181,11 +181,11 @@ This example is the same as the first one except for the way it handles multiple
 --@name async example game new edit2
 --@author ESF
 --@shared
---@include esf_libs/async/async_lib.txt
+--@include Starfall/MyLibs/Async/Shared/async_lib.txt
 
 if SERVER then
     --Get the library
-    Async = require("esf_libs/async/async_lib.txt")
+    Async = require("Starfall/MyLibs/Async/Shared/async_lib.txt")
     Async.startThreading()
     
     --This is for later
