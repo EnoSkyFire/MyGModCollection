@@ -178,7 +178,140 @@ In this example ten threads will try to count to ten. The first thread to get to
 This example is the same as the first one except for the way it handles multiple threads.
 
 ```lua
+--@name async example game new edit2
+--@author ESF
+--@shared
+--@include esf_libs/async/async_lib.txt
 
+if SERVER then
+    --Get the library
+    Async = require("esf_libs/async/async_lib.txt")
+    Async.startThreading()
+    
+    --This is for later
+    counters = {}  -- Table to hold counters for each type
+    
+    --Define the function that will be used by all threads
+    function Message(type)
+        if not counters[type] then
+            counters[type] = 0  -- Initialize the counter for this type if it doesn't exist
+        end
+        
+        while true do
+            Async.wait(math.random(0.1,1.5)) --Wait in seconds
+            print("Message " .. type .. ": " .. counters[type])  
+            counters[type] = counters[type] + 1  -- Increment the counter for this type
+        end
+    end
+    
+    -- Function to create and run threads
+    function createAndRunThread(type)
+        local thread = Async.thread.create(function() Message(type) end)
+        thread:run()
+        thread.name = "Player " .. type
+        print("Thread " .. type .. ", go")
+        return thread
+    end
+    
+    --Create the game thread, directly defining the function, running them at the same time.
+    Async.thread.create(function()
+        print("Main thread started... See which thread will win this race by going over 10")
+        
+        -- Create and run threads from A to J
+        local threads = {}
+        for i = 65, 74 do  -- ASCII values for A to J
+            local type = string.char(i)
+            threads[type] = createAndRunThread(type)
+        end
+        
+        local winner = nil
+        while true do
+            Async.perf2(20, false) --I only want 20uS of server time used. perf() without the 2 makes the thread wait in percentages.
+            for type, _ in pairs(counters) do
+                if counters[type] > 10 then
+                    winner = type
+                    print("Thread " .. type .. " won!")
+                    break
+                end
+            end
+            if winner then break end
+        end
+        
+        -- Stop all threads
+        print("Closing all threads")
+        for _, thread in pairs(threads) do
+            thread:stop()
+        end
+        
+        --Thread closes automatically when it reached its end.
+        print("Exiting main thread. Closing race")       
+        
+    end):run() --Called :run() right after creation. No need to store this thread 
+elseif CLIENT then
+    --Get the library
+    Async = require("esf_libs/async/async_lib.txt")
+    Async.startThreading()
+    
+    --This is for later
+    counters = {}  -- Table to hold counters for each type
+    
+    --Define the function that will be used by all threads
+    function Message(type)
+        if not counters[type] then
+            counters[type] = 0  -- Initialize the counter for this type if it doesn't exist
+        end
+        
+        while true do
+            Async.wait(math.random(0.1,1.5)) --Wait in seconds
+            print("Message " .. type .. ": " .. counters[type])  
+            counters[type] = counters[type] + 1  -- Increment the counter for this type
+        end
+    end
+    
+    -- Function to create and run threads
+    function createAndRunThread(type)
+        local thread = Async.thread.create(function() Message(type) end)
+        thread:run()
+        thread.name = "Player " .. type
+        print("Thread " .. type .. ", go")
+        return thread
+    end
+    
+    --Create the game thread, directly defining the function, running them at the same time.
+    Async.thread.create(function()
+        print("Main thread started... See which thread will win this race by going over 10")
+        
+        -- Create and run threads from A to J
+        local threads = {}
+        for i = 65, 74 do  -- ASCII values for A to J
+            local type = string.char(i)
+            threads[type] = createAndRunThread(type)
+        end
+        
+        local winner = nil
+        while true do
+            Async.perf2(20, false) --I only want 20uS of server time used. perf() without the 2 makes the thread wait in percentages.
+            for type, _ in pairs(counters) do
+                if counters[type] > 10 then
+                    winner = type
+                    print("Thread " .. type .. " won!")
+                    break
+                end
+            end
+            if winner then break end
+        end
+        
+        -- Stop all threads
+        print("Closing all threads")
+        for _, thread in pairs(threads) do
+            thread:stop()
+        end
+        
+        --Thread closes automatically when it reached its end.
+        print("Exiting main thread. Closing race")       
+        
+    end):run() --Called :run() right after creation. No need to store this thread 
+end
 
 ```
 
