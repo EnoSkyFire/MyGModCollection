@@ -16,8 +16,8 @@ ScreenLink.ownerChips = find.byClass("starfall_processor", function(chip)
     return chip:getOwner() == owner()
 end)
 
--- Function to check if a screen is linked to any chip
-function ScreenLink.isScreenLinked(self, screen)
+-- Function to check if the given screen is linked to any chip
+function screenLinkPrototype.isScreenLinked(self, screen)
     for _, chip in ipairs(self.ownerChips) do
         for i, component in ipairs(chip:getLinkedComponents()) do
             if component == screen then
@@ -28,8 +28,8 @@ function ScreenLink.isScreenLinked(self, screen)
     return false
 end
 
--- Function to check if a screen is linked to any chip
-function ScreenLink.hasChipScreen()
+-- Function that check if any screens are linked to the chip
+function screenLinkPrototype.hasChipScreen()
     for i, component in ipairs(chip():getLinkedComponents()) do
         if component:getClass() == "starfall_screen" then
             return true
