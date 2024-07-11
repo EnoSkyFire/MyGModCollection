@@ -20,12 +20,12 @@ Async.thread.running = coroutine.running
 Async.wait = coroutine.wait
 Async.yield = coroutine.yield
 
--- perf. Same as used in expression 2. perf( max usage in % ). 
--- Checks if the quota used exceeds the specified usage percentage. 
+-- perf. Same as used in expression 2. perf( max usage in % ).
+-- Checks if the quota used exceeds the specified usage percentage.
 -- If it does, yields the coroutine.
 -- @param use: The usage percentage threshold.
 -- @param optimal: Boolean flag to determine if optimal performance is required.
--- @return: Returns true if the coroutine yields, otherwise false.          
+-- @return: Returns true if the coroutine yields, otherwise false.
 function Async.perf(use, optimal)
     if quotaUsed() >= quotaMax()*(use/100) then
         try(function() coroutine.yield() end, function( )
@@ -35,9 +35,9 @@ function Async.perf(use, optimal)
         end)
         return true
     else
-        return false    
+        return false
     end
-end  
+end
 
 -- perf2. Similar as normal perf, but it takes cpu time instead.
 -- @param cpu: The CPU time threshold in microseconds.
@@ -45,22 +45,22 @@ end
 -- @return: Returns true if the coroutine yields, otherwise false.
 function Async.perf2(cpu, optimal)
     if quotaUsed()*1000000 >= cpu then
-        try(function() coroutine.yield() end, function(  )
+        try(function() coroutine.yield() end, function( )
             if optimal == false then
                 throw("Must be in a thread to run. ", 1, false )    
             end
         end)
         return true
     else
-        return false    
+        return false
     end
-end  
+end
 
 -- Async.thread.create. Creates a new thread with the specified function.
 -- @param func: The function to be executed in the thread.
 -- @return: Returns a thread object.
-function Async.thread.create( func )
-    local thr = 
+function Async.thread.create(func)
+    local thr =
     {
         args = {},
         running = false,
@@ -69,7 +69,7 @@ function Async.thread.create( func )
         
         -- run. Starts the thread with the provided arguments.
         -- @param ...: Arguments to be passed to the thread function.
-        run = function(this, ... )
+        run = function(this, ...)
             if this.running == false then
                 this.args = {...}
                 this.running = true
@@ -82,14 +82,14 @@ function Async.thread.create( func )
         stop = function(this)
             if this.running == true then
                 this.running = false
-                Async.thread.pool[tostring(this.co)] = nil 
+                Async.thread.pool[tostring(this.co)] = nil
             end
         end,
         
         -- update. Updates the arguments for the thread function.
         -- @param ...: New arguments to be passed to the thread function.
         update = function(this, ...)
-            this.args = {...}    
+            this.args = {...}
         end,
         
         -- onExit, onYield, onReturn. Placeholder functions for thread events.
@@ -102,18 +102,20 @@ end
 
 -- startThreading. Begins the threading system by hooking into the "tick" event.
 function Async.startThreading()
-    hook.add("tick","async_threading", function( )
+    hook.add("tick","async_threading", function()
         for k, v in pairs(Async.thread.pool) do
             if v.args == nil then continue end
-            if coroutine.status(v.co) ~= "suspended" then Async.thread.pool[k].onExit(Async.thread.pool[k].Return) Async.thread.pool[k] = nil continue end
+            if coroutine.status(v.co) ~= "suspended" then
+                Async.thread.pool[k].onExit(Async.thread.pool[k].Return) Async.thread.pool[k] = nil continue
+            end
             if coroutine.status(v.co) == "suspended" then
                 Async.thread.pool[k].onYield(Async.thread.pool[k].Return)
                 if Async.thread.pool[k].Return ~= nil then
-                    Async.thread.pool[k].onReturn(Async.thread.pool[k].Return)    
+                    Async.thread.pool[k].onReturn(Async.thread.pool[k].Return)
                 end
             end
-            try(function() Async.thread.pool[k].Return = coroutine.resume(v.co, unpack(v.args)) end, function( err ) 
-                print(  err )    
+            try(function() Async.thread.pool[k].Return = coroutine.resume(v.co, unpack(v.args)) end, function(err) 
+                print(err)
             end)
         end
     end)
