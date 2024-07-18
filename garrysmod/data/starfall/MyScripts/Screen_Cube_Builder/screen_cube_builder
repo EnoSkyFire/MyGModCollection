@@ -18,12 +18,12 @@ Default Keyboard shortcuts: https://github.com/ajaxorg/ace/wiki/Default-Keyboard
 --solved issue: obb measures the physics mesh and not the hitbox
 --solution: use function getHitBoxBounds instead of obbSize
     
-local plate = 24
-local hidden = false
-local transparent = true
-local shadow = false
-local groundOffset = 0
-
+local plate = 2                    -- Size of the screen. Screensizes: 2, 4, 8, 16, 24, 32
+local hidden = false                -- Give the screens a material that makes them appear invisble from the outside
+local transparent = true            -- Make the screens transparant making the inside visible
+local shadow = false                -- Allow the screens to have visible shadows
+local groundOffset = 0              -- Offset from the ground
+local deleteScreensWithChip = true  -- Delete the screens when the chip is deleted
 
 local chip = chip()
 local chipPos = chip:getPos()
@@ -117,7 +117,7 @@ local function orientation(i, renderDeviation, ground, screenX, screenY, screenZ
     return pos, ang
 end
 
-local function createCube(screen, plate, hidden, transparant)
+local function createCube(screen, plate, hidden, transparant, deleteScreensWithChip)
     local screenTable = find.byClass("starfall_screen", function(plyScreen)
         --If found and owned by the owner then return screen data
         if plyScreen:getOwner() == owner() then 
@@ -127,7 +127,7 @@ local function createCube(screen, plate, hidden, transparant)
     
     if table.count(screenTable) > 4 then
         print("SCREEN BUILDER ERROR:\nBuilding a cube of screens will go over the screen limit!")
-        chip:remove()
+        chip():remove()
         return
     end
     
@@ -148,7 +148,7 @@ local function createCube(screen, plate, hidden, transparant)
     local start = chip:getPos() --vector
     local endpos = chip:getPos()-Vector(0,0,15000) --vector
     local filter = nil --table
-    local mask = 16395 --number value
+    local mask = 16395 --number value, 16395 is World + Brushes
     local colgroup = nil --number
     local ignworld = false --boolean
         
@@ -186,6 +186,8 @@ local function createCube(screen, plate, hidden, transparant)
         end)
 
     end
+    
+    prop.setPropClean(deleteScreensWithChip)
 end
 
-createCube(screen, plate, hidden, transparent)
+createCube(screen, plate, hidden, transparent, deleteScreensWithChip)
